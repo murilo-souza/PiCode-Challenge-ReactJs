@@ -12,7 +12,7 @@ export const Container = styled.nav`
     border-bottom: 1.5px solid ${theme.colors.stroke};
 
     img {
-        width: 300px;
+        width: 220px;
     } 
 
     div{
