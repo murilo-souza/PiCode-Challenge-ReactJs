@@ -6,11 +6,12 @@ interface Props {
   title: string;
   subtitle: string;
   children: ReactNode;
+  onClick: () => void;
 }
 
-export function CarModel({ icon, title, subtitle, children }: Props) {
+export function CarModel({ icon, title, subtitle, children, onClick }: Props) {
   return (
-    <Container>
+    <Container onClick={onClick}>
       <section>
         <section>{icon}</section>
         <div>

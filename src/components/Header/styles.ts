@@ -33,19 +33,5 @@ export const Container = styled.header`
         }
     }
     
-    button{
-        background-color: ${theme.colors.stroke};
-        border: none;
-        border-radius: 5px;
-        color: ${theme.colors.text};
-        cursor: pointer;
-        
-        :hover{
-            
-            filter: brightness(0.8);
-            transition: all 0.5s ease-out;
-        }
-
-    }
 
 `
