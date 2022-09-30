@@ -1,4 +1,5 @@
 import {createGlobalStyle} from 'styled-components'
+import { theme } from './theme/theme'
 
 export const GlobalStyles = createGlobalStyle`
     *{
@@ -17,5 +18,9 @@ export const GlobalStyles = createGlobalStyle`
     }
     body, input, textarea, select, button {
         font: 400 1rem "Poppins", sans-serif;
+    }
+
+    html {
+        background-color: ${theme.colors.background}
     }
 `
