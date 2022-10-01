@@ -105,7 +105,7 @@ export function RegisterProvider({ children }: RegisterProviderProps) {
   useEffect(() => {
     getBooks();
     getStudents();
-  }, []);
+  }, [students, books]);
 
   return (
     <RegisterContext.Provider

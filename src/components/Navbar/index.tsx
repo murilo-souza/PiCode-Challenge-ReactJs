@@ -5,7 +5,7 @@ import Logo from "../../assets/Logo.png";
 export function Navbar() {
   return (
     <Container>
-      <NavLink to="/">
+      <NavLink to="/books">
         <img src={Logo} alt="Logo PiCode" />
       </NavLink>
       <div>
