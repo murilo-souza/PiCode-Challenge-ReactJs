@@ -5,7 +5,14 @@ import {
   useEffect,
   useState,
 } from "react";
-import { addDoc, collection, getDocs, getFirestore } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  getDoc,
+  getFirestore,
+} from "firebase/firestore";
 import { app } from "../service/firebase";
 
 interface Book {
@@ -41,6 +48,7 @@ export const RegisterContext = createContext<RegisterContextData>(
 export function RegisterProvider({ children }: RegisterProviderProps) {
   const [books, setBooks] = useState<Book[] | any>([]);
   const [students, setStudents] = useState<Student[] | any>([]);
+
   const db = getFirestore(app);
   const booksCollectionRef = collection(db, "books");
   const studentsCollectionRef = collection(db, "students");
@@ -76,24 +84,21 @@ export function RegisterProvider({ children }: RegisterProviderProps) {
     }));
 
     setBooks(dataFormatted);
-    console.log(dataFormatted);
   }
 
   async function getStudents() {
-    const booksCollectionRef = collection(db, "students");
-    const data = await getDocs(booksCollectionRef);
+    const data = await getDocs(studentsCollectionRef);
     const dataFormatted = data.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
     }));
-
     setStudents(dataFormatted);
   }
 
   useEffect(() => {
     getBooks();
     getStudents();
-  }, [books, students]);
+  }, []);
 
   return (
     <RegisterContext.Provider

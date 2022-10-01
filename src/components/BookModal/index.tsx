@@ -1,4 +1,4 @@
-import Modal from "react-modal";
+import Modal, { OnAfterOpenCallbackOptions } from "react-modal";
 import { X } from "phosphor-react";
 import { Container } from "./styles";
 import { useRegister } from "../../hooks/useRegister";
@@ -8,6 +8,15 @@ interface BookModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
   isUpdating?: boolean;
+  // book: Book;
+}
+
+interface Book {
+  title: string;
+  author: string;
+  quantity: number;
+  pages: number;
+  withdraw: number;
 }
 
 export function BookModal({
