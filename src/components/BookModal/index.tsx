@@ -1,6 +1,8 @@
 import Modal from "react-modal";
 import { X } from "phosphor-react";
 import { Container } from "./styles";
+import { useRegister } from "../../hooks/useRegister";
+import { useState, FormEvent } from "react";
 
 interface BookModalProps {
   isOpen: boolean;
@@ -13,9 +15,32 @@ export function BookModal({
   onRequestClose,
   isUpdating = false,
 }: BookModalProps) {
-  function handleNewBook() {
-    alert("New Register Book");
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [quantity, setQuantity] = useState(0);
+  const [pages, setPages] = useState(0);
+  const [withdraw, setWithdraw] = useState(0);
+
+  const { bookRegister } = useRegister();
+
+  function handleNewBook(event: FormEvent) {
+    event.preventDefault();
+
+    bookRegister({
+      title,
+      author,
+      quantity,
+      pages,
+      withdraw,
+    });
+
+    setTitle("");
+    setAuthor("");
+    setQuantity(0);
+    setPages(0);
+    setWithdraw(0);
   }
+
   function handleEditBook() {
     alert("New Edit Book");
   }
@@ -32,11 +57,43 @@ export function BookModal({
       </button>
       <Container>
         <h1>{isUpdating ? "Editar livro" : "Cadastrar livro"}</h1>
-        <input placeholder="Titulo do livro" />
-        <input placeholder="Nome do autor" />
-        <input placeholder="Quantidade de livros" />
-        <input placeholder="Quantidade de paginas" />
-        {isUpdating && <input placeholder="Livros retirados" />}
+        <label>Titulo</label>
+        <input
+          placeholder="Titulo do livro"
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+        />
+        <label>Autor</label>
+        <input
+          placeholder="Nome do autor"
+          value={author}
+          onChange={(event) => setAuthor(event.target.value)}
+        />
+        <label>Livros disponíveis</label>
+        <input
+          placeholder="Quantidade de livros diponíveis"
+          value={quantity}
+          type="number"
+          onChange={(event) => setQuantity(Number(event.target.value))}
+        />
+        <label>Páginas</label>
+        <input
+          placeholder="Quantidade de paginas"
+          value={pages}
+          type="number"
+          onChange={(event) => setPages(Number(event.target.value))}
+        />
+        {isUpdating && (
+          <>
+            <label>Livros retirados</label>
+            <input
+              placeholder="Livros retirados"
+              value={withdraw}
+              type="number"
+              onChange={(event) => setWithdraw(Number(event.target.value))}
+            />
+          </>
+        )}
 
         <button onClick={isUpdating ? handleEditBook : handleNewBook}>
           {isUpdating ? "Editar Livro" : "Cadastrar Livro"}

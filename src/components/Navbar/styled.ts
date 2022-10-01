@@ -20,8 +20,13 @@ export const Container = styled.nav`
             text-decoration: none;
             margin-left: 75px;
             font-size: 25px;
-            color: ${theme.colors.text}
+            color: ${theme.colors.text};
 
+            
+        }
+
+        .active{
+            color: ${theme.colors.stroke};
         }
     }
 `

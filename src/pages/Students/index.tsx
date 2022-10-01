@@ -6,12 +6,15 @@ import { Student } from "phosphor-react";
 import { useState } from "react";
 import { StudentRegisterModal } from "../../components/StudentRegisterModal";
 import { StudentDetailsModal } from "../../components/StudentDetailsModal";
+import { useRegister } from "../../hooks/useRegister";
 
 export function Students() {
   const [isStudentRegisterModalOpen, setIsStudentRegisterModalOpen] =
     useState(false);
   const [isStudentDetailsModalOpen, setIsStudentDetailsModalOpen] =
     useState(false);
+
+  const { students } = useRegister();
 
   function handleOpenStudentRegisterModal() {
     setIsStudentRegisterModalOpen(true);
@@ -42,14 +45,17 @@ export function Students() {
         isOpen={isStudentDetailsModalOpen}
         onRequestClose={handleCloseStudentDetailsModal}
       />
-      <CarModel
-        title="Murilo Leme de Souza"
-        subtitle="ID: 190188"
-        icon={<Student size={45} color="#e1e1e6" />}
-        onClick={handleOpenStudentDetailsModal}
-      >
-        <Badge title="Livros retirados" quantity={4} />
-      </CarModel>
+      {students.map((student) => (
+        <CarModel
+          key={student.id}
+          title={student.name}
+          subtitle={`ID: ${student.ID}`}
+          icon={<Student size={45} color="#e1e1e6" />}
+          onClick={handleOpenStudentDetailsModal}
+        >
+          <Badge title="Livros retirados" quantity={4} />
+        </CarModel>
+      ))}
     </Container>
   );
 }

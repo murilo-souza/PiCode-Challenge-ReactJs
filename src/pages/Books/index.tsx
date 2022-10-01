@@ -5,10 +5,12 @@ import { Books as BooksIcon } from "phosphor-react";
 import { Header } from "../../components/Header";
 import { useState } from "react";
 import { BookModal } from "../../components/BookModal";
+import { useRegister } from "../../hooks/useRegister";
 
 export function Books() {
   const [isNewRegisterModalOpen, setIsNewRegisterModal] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const { books } = useRegister();
 
   function handleOpenNewRegisterModal() {
     setIsNewRegisterModal(true);
@@ -36,16 +38,19 @@ export function Books() {
         isUpdating={isUpdating}
       />
       <section>
-        <CarModel
-          title="Crepusculo"
-          subtitle="Eleonora"
-          icon={<BooksIcon size={45} color="#e1e1e6" />}
-          onClick={handleOpenEditRegisterModal}
-        >
-          <Badge title="Diponível" quantity={5} />
-          <Badge title="Páginas" quantity={500} />
-          <Badge title="Retirados" quantity={4} />
-        </CarModel>
+        {books.map((book) => (
+          <CarModel
+            key={book.id}
+            title={book.title}
+            subtitle={book.author}
+            icon={<BooksIcon size={45} color="#e1e1e6" />}
+            onClick={handleOpenEditRegisterModal}
+          >
+            <Badge title="Diponível" quantity={book.quantity} />
+            <Badge title="Páginas" quantity={book.pages} />
+            <Badge title="Retirados" quantity={book.withdraw} />
+          </CarModel>
+        ))}
       </section>
     </Container>
   );

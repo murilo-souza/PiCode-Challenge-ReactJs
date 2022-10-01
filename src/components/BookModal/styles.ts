@@ -7,6 +7,11 @@ export const Container = styled.form`
         margin-bottom: 30px;
     }
 
+    label{
+        color: ${theme.colors.text};
+        
+    }
+
     input {
         width: 100%;
         padding:0 24px;

@@ -8,7 +8,7 @@ export function WebRoutes() {
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Books />} />
+        <Route path="/books" element={<Books />} />
         <Route path="/students" element={<Students />} />
       </Routes>
     </>

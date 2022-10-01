@@ -9,6 +9,7 @@ export const Container = styled.button`
     background-color: ${theme.colors.background_card};
     cursor: pointer;
     margin: 0 15px 30px 0 ;
+    width: 100%;
 
     :hover{
         filter: brightness(0.8);
@@ -52,6 +53,6 @@ export const Container = styled.button`
     footer{
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        //justify-content: space-between;
     }
 `

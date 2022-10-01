@@ -1,7 +1,8 @@
 import Modal from "react-modal";
 import { X } from "phosphor-react";
 import { Container } from "./styles";
-
+import { useRegister } from "../../hooks/useRegister";
+import { useState, FormEvent } from "react";
 interface StudentModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
@@ -11,6 +12,23 @@ export function StudentRegisterModal({
   isOpen,
   onRequestClose,
 }: StudentModalProps) {
+  const [name, setName] = useState("");
+  const [ID, setID] = useState("");
+
+  const { studentRegister } = useRegister();
+
+  function handleStudentRegister(event: FormEvent) {
+    event.preventDefault();
+
+    studentRegister({
+      name,
+      ID,
+    });
+
+    setName("");
+    setID("");
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -23,9 +41,17 @@ export function StudentRegisterModal({
       </button>
       <Container>
         <h1>Cadastrar Aluno</h1>
-        <input placeholder="Nome completo do aluno" />
-        <input placeholder="ID do aluno" />
-        <button>Cadastrar Aluno</button>
+        <input
+          placeholder="Nome completo do aluno"
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+        <input
+          placeholder="ID do aluno"
+          value={ID}
+          onChange={(event) => setID(event.target.value)}
+        />
+        <button onClick={handleStudentRegister}>Cadastrar Aluno</button>
       </Container>
     </Modal>
   );

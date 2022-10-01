@@ -9,10 +9,14 @@ export function Navbar() {
         <img src={Logo} alt="Logo PiCode" />
       </NavLink>
       <div>
-        <NavLink to="/" className="NavLink">
+        <NavLink to="/books" className="NavLink" aria-activedescendant="active">
           Livros
         </NavLink>
-        <NavLink to="/students" className="NavLink">
+        <NavLink
+          to="/students"
+          className="NavLink"
+          aria-activedescendant="active"
+        >
           Alunos
         </NavLink>
       </div>
