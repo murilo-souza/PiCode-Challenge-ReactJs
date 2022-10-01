@@ -10,14 +10,15 @@ import { useRegister } from "../../hooks/useRegister";
 export function Books() {
   const [isNewRegisterModalOpen, setIsNewRegisterModal] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const { books } = useRegister();
+
+  const { books, getBookIdToEdit } = useRegister();
 
   function handleOpenNewRegisterModal() {
     setIsNewRegisterModal(true);
     setIsUpdating(false);
   }
 
-  function handleOpenEditRegisterModal() {
+  function handleOpenEditRegisterModal(d: any) {
     setIsNewRegisterModal(true);
     setIsUpdating(true);
   }
@@ -44,7 +45,9 @@ export function Books() {
             title={book.title}
             subtitle={book.author}
             icon={<BooksIcon size={45} color="#e1e1e6" />}
-            onClick={handleOpenEditRegisterModal}
+            onClick={() =>
+              handleOpenEditRegisterModal(getBookIdToEdit(book.id))
+            }
           >
             <Badge title="Diponível" quantity={book.quantity} />
             <Badge title="Páginas" quantity={book.pages} />

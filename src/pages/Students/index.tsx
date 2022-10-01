@@ -14,7 +14,7 @@ export function Students() {
   const [isStudentDetailsModalOpen, setIsStudentDetailsModalOpen] =
     useState(false);
 
-  const { students } = useRegister();
+  const { students, getStudentIdToEdit } = useRegister();
 
   function handleOpenStudentRegisterModal() {
     setIsStudentRegisterModalOpen(true);
@@ -24,7 +24,7 @@ export function Students() {
     setIsStudentRegisterModalOpen(false);
   }
 
-  function handleOpenStudentDetailsModal() {
+  function handleOpenStudentDetailsModal(d: any) {
     setIsStudentDetailsModalOpen(true);
   }
 
@@ -51,7 +51,9 @@ export function Students() {
           title={student.name}
           subtitle={`ID: ${student.ID}`}
           icon={<Student size={45} color="#e1e1e6" />}
-          onClick={handleOpenStudentDetailsModal}
+          onClick={() =>
+            handleOpenStudentDetailsModal(getStudentIdToEdit(student.id))
+          }
         >
           <Badge title="Livros retirados" quantity={4} />
         </CarModel>

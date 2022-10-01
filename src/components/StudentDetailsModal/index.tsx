@@ -3,12 +3,20 @@ import Modal from "react-modal";
 import { X, Student } from "phosphor-react";
 import { BookListContent } from "../BookListContent";
 import { Button } from "../Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BooksAvailableListModal } from "../BooksAvailableListModal";
+import { useRegister } from "../../hooks/useRegister";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { app } from "../../service/firebase";
 
 interface StudentDetailsModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
+}
+
+interface StudentProps {
+  name: string;
+  ID: string;
 }
 
 export function StudentDetailsModal({
@@ -16,6 +24,9 @@ export function StudentDetailsModal({
   onRequestClose,
 }: StudentDetailsModalProps) {
   const [isBookListOpen, setIsBookListOpen] = useState(false);
+  const [student, setStudent] = useState({} as StudentProps | any);
+  const { studentSelectById } = useRegister();
+
   function handleOpenBookListModal() {
     setIsBookListOpen(true);
   }
@@ -23,6 +34,16 @@ export function StudentDetailsModal({
   function handleCloseBookListModal() {
     setIsBookListOpen(false);
   }
+
+  // async function getStudentData() {
+  //   const db = getFirestore(app);
+  //   const docRef = doc(db, "students", studentSelectById);
+  //   getDoc(docRef).then((student) => setStudent(student));
+  // }
+
+  // useEffect(() => {
+  //   getStudentData();
+  // }, [isOpen]);
 
   return (
     <Modal

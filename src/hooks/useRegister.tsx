@@ -5,18 +5,11 @@ import {
   useEffect,
   useState,
 } from "react";
-import {
-  addDoc,
-  collection,
-  doc,
-  getDocs,
-  getDoc,
-  getFirestore,
-} from "firebase/firestore";
+import { addDoc, collection, getDocs, getFirestore } from "firebase/firestore";
 import { app } from "../service/firebase";
 
 interface Book {
-  id?: string;
+  id?: any;
   title: string;
   author: string;
   quantity: number;
@@ -25,7 +18,7 @@ interface Book {
 }
 
 interface Student {
-  id?: string;
+  id?: any;
   name: string;
   ID: string;
 }
@@ -39,6 +32,10 @@ interface RegisterContextData {
   students: Student[];
   bookRegister: (bookInfo: Book) => void;
   studentRegister: (studentInfo: Student) => void;
+  getBookIdToEdit: (id: string) => void;
+  getStudentIdToEdit: (id: string) => void;
+  bookSelectedById: string;
+  studentSelectById: string;
 }
 
 export const RegisterContext = createContext<RegisterContextData>(
@@ -48,6 +45,8 @@ export const RegisterContext = createContext<RegisterContextData>(
 export function RegisterProvider({ children }: RegisterProviderProps) {
   const [books, setBooks] = useState<Book[] | any>([]);
   const [students, setStudents] = useState<Student[] | any>([]);
+  let [bookSelectedById, setBookSelectedById] = useState("");
+  let [studentSelectById, setStudentSelectById] = useState("");
 
   const db = getFirestore(app);
   const booksCollectionRef = collection(db, "books");
@@ -69,13 +68,6 @@ export function RegisterProvider({ children }: RegisterProviderProps) {
     });
   }
 
-  async function studentRegister({ name, ID }: Student) {
-    await addDoc(studentsCollectionRef, {
-      ID,
-      name,
-    });
-  }
-
   async function getBooks() {
     const data = await getDocs(booksCollectionRef);
     const dataFormatted = data.docs.map((doc) => ({
@@ -84,6 +76,17 @@ export function RegisterProvider({ children }: RegisterProviderProps) {
     }));
 
     setBooks(dataFormatted);
+  }
+
+  async function getBookIdToEdit(id: string) {
+    setBookSelectedById(id);
+  }
+
+  async function studentRegister({ name, ID }: Student) {
+    await addDoc(studentsCollectionRef, {
+      ID,
+      name,
+    });
   }
 
   async function getStudents() {
@@ -95,6 +98,10 @@ export function RegisterProvider({ children }: RegisterProviderProps) {
     setStudents(dataFormatted);
   }
 
+  async function getStudentIdToEdit(id: string) {
+    setStudentSelectById(id);
+  }
+
   useEffect(() => {
     getBooks();
     getStudents();
@@ -102,7 +109,16 @@ export function RegisterProvider({ children }: RegisterProviderProps) {
 
   return (
     <RegisterContext.Provider
-      value={{ books, bookRegister, studentRegister, students }}
+      value={{
+        books,
+        bookRegister,
+        getBookIdToEdit,
+        bookSelectedById,
+        studentRegister,
+        getStudentIdToEdit,
+        students,
+        studentSelectById,
+      }}
     >
       {children}
     </RegisterContext.Provider>

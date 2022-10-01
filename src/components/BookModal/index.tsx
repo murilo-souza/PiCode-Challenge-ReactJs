@@ -1,17 +1,18 @@
-import Modal, { OnAfterOpenCallbackOptions } from "react-modal";
+import Modal from "react-modal";
 import { X } from "phosphor-react";
 import { Container } from "./styles";
 import { useRegister } from "../../hooks/useRegister";
 import { useState, FormEvent } from "react";
-
+import { app } from "../../service/firebase";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
 interface BookModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
   isUpdating?: boolean;
-  // book: Book;
 }
 
 interface Book {
+  id?: string;
   title: string;
   author: string;
   quantity: number;
@@ -24,13 +25,17 @@ export function BookModal({
   onRequestClose,
   isUpdating = false,
 }: BookModalProps) {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [quantity, setQuantity] = useState(0);
-  const [pages, setPages] = useState(0);
-  const [withdraw, setWithdraw] = useState(0);
+  const [book, setBook] = useState({} as Book | any);
 
-  const { bookRegister } = useRegister();
+  const [title, setTitle] = useState(isUpdating ? book.title : "");
+  const [author, setAuthor] = useState(isUpdating ? book.author : "");
+  const [quantity, setQuantity] = useState(isUpdating ? book.quantity : 0);
+  const [pages, setPages] = useState(isUpdating ? book.pages : 0);
+  const [withdraw, setWithdraw] = useState(isUpdating ? book.withdraw : 0);
+
+  const db = getFirestore(app);
+
+  const { bookRegister, bookSelectedById } = useRegister();
 
   function handleNewBook(event: FormEvent) {
     event.preventDefault();
@@ -50,8 +55,24 @@ export function BookModal({
     setWithdraw(0);
   }
 
-  function handleEditBook() {
-    alert("New Edit Book");
+  function handleEditBook(event: FormEvent) {
+    event.preventDefault();
+
+    const docRef = doc(db, "books", bookSelectedById);
+
+    setDoc(docRef, {
+      title,
+      author,
+      quantity,
+      pages,
+      withdraw,
+    });
+
+    setTitle("");
+    setAuthor("");
+    setQuantity(0);
+    setPages(0);
+    setWithdraw(0);
   }
 
   return (
@@ -64,19 +85,21 @@ export function BookModal({
       <button className="react-modal-close" onClick={onRequestClose}>
         <X size={32} color="#e1e1e6" />
       </button>
-      <Container>
+      <Container onSubmit={isUpdating ? handleEditBook : handleNewBook}>
         <h1>{isUpdating ? "Editar livro" : "Cadastrar livro"}</h1>
         <label>Titulo</label>
         <input
-          placeholder="Titulo do livro"
+          placeholder="Nome do autor"
           value={title}
           onChange={(event) => setTitle(event.target.value)}
+          required
         />
         <label>Autor</label>
         <input
           placeholder="Nome do autor"
           value={author}
           onChange={(event) => setAuthor(event.target.value)}
+          required
         />
         <label>Livros disponíveis</label>
         <input
@@ -84,6 +107,7 @@ export function BookModal({
           value={quantity}
           type="number"
           onChange={(event) => setQuantity(Number(event.target.value))}
+          required
         />
         <label>Páginas</label>
         <input
@@ -91,6 +115,7 @@ export function BookModal({
           value={pages}
           type="number"
           onChange={(event) => setPages(Number(event.target.value))}
+          required
         />
         {isUpdating && (
           <>
@@ -100,11 +125,12 @@ export function BookModal({
               value={withdraw}
               type="number"
               onChange={(event) => setWithdraw(Number(event.target.value))}
+              required
             />
           </>
         )}
 
-        <button onClick={isUpdating ? handleEditBook : handleNewBook}>
+        <button type="submit">
           {isUpdating ? "Editar Livro" : "Cadastrar Livro"}
         </button>
       </Container>
