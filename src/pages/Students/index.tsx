@@ -7,6 +7,7 @@ import { useState } from "react";
 import { StudentRegisterModal } from "../../components/StudentRegisterModal";
 import { StudentDetailsModal } from "../../components/StudentDetailsModal";
 import { useRegister } from "../../hooks/useRegister";
+import { Loading } from "../../components/Loading";
 
 export function Students() {
   const [isStudentRegisterModalOpen, setIsStudentRegisterModalOpen] =
@@ -14,7 +15,7 @@ export function Students() {
   const [isStudentDetailsModalOpen, setIsStudentDetailsModalOpen] =
     useState(false);
 
-  const { students, getStudentIdToEdit } = useRegister();
+  const { students, getStudentIdToEdit, loading } = useRegister();
 
   function handleOpenStudentRegisterModal() {
     setIsStudentRegisterModalOpen(true);
@@ -45,19 +46,23 @@ export function Students() {
         isOpen={isStudentDetailsModalOpen}
         onRequestClose={handleCloseStudentDetailsModal}
       />
-      {students.map((student) => (
-        <CarModel
-          key={student.id}
-          title={student.name}
-          subtitle={`ID: ${student.ID}`}
-          icon={<Student size={45} color="#e1e1e6" />}
-          onClick={() =>
-            handleOpenStudentDetailsModal(getStudentIdToEdit(student.id))
-          }
-        >
-          <Badge title="Livros retirados" quantity={4} />
-        </CarModel>
-      ))}
+      {loading ? (
+        <Loading />
+      ) : (
+        students.map((student) => (
+          <CarModel
+            key={student.id}
+            title={student.name}
+            subtitle={`ID: ${student.ID}`}
+            icon={<Student size={45} color="#e1e1e6" />}
+            onClick={() =>
+              handleOpenStudentDetailsModal(getStudentIdToEdit(student.id))
+            }
+          >
+            <Badge title="Livros retirados" quantity={4} />
+          </CarModel>
+        ))
+      )}
     </Container>
   );
 }

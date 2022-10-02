@@ -28,6 +28,7 @@ interface RegisterProviderProps {
 }
 
 interface RegisterContextData {
+  loading: boolean;
   books: Book[];
   students: Student[];
   bookRegister: (bookInfo: Book) => void;
@@ -43,6 +44,7 @@ export const RegisterContext = createContext<RegisterContextData>(
 );
 
 export function RegisterProvider({ children }: RegisterProviderProps) {
+  const [loading, setLoading] = useState(false);
   const [books, setBooks] = useState<Book[] | any>([]);
   const [students, setStudents] = useState<Student[] | any>([]);
   let [bookSelectedById, setBookSelectedById] = useState("");
@@ -69,6 +71,7 @@ export function RegisterProvider({ children }: RegisterProviderProps) {
   }
 
   async function getBooks() {
+    setLoading(true);
     const data = await getDocs(booksCollectionRef);
     const dataFormatted = data.docs.map((doc) => ({
       ...doc.data(),
@@ -76,6 +79,8 @@ export function RegisterProvider({ children }: RegisterProviderProps) {
     }));
 
     setBooks(dataFormatted);
+
+    setLoading(false);
   }
 
   async function getBookIdToEdit(id: string) {
@@ -90,12 +95,15 @@ export function RegisterProvider({ children }: RegisterProviderProps) {
   }
 
   async function getStudents() {
+    setLoading(true);
+
     const data = await getDocs(studentsCollectionRef);
     const dataFormatted = data.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
     }));
     setStudents(dataFormatted);
+    setLoading(false);
   }
 
   async function getStudentIdToEdit(id: string) {
@@ -105,11 +113,12 @@ export function RegisterProvider({ children }: RegisterProviderProps) {
   useEffect(() => {
     getBooks();
     getStudents();
-  }, [students, books]);
+  }, []);
 
   return (
     <RegisterContext.Provider
       value={{
+        loading,
         books,
         bookRegister,
         getBookIdToEdit,

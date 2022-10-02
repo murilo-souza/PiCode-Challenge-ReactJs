@@ -2,9 +2,9 @@ import Modal from "react-modal";
 import { X } from "phosphor-react";
 import { Container } from "./styles";
 import { useRegister } from "../../hooks/useRegister";
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { app } from "../../service/firebase";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 interface BookModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
@@ -29,8 +29,8 @@ export function BookModal({
 
   const [title, setTitle] = useState(isUpdating ? book.title : "");
   const [author, setAuthor] = useState(isUpdating ? book.author : "");
-  const [quantity, setQuantity] = useState(isUpdating ? book.quantity : 0);
-  const [pages, setPages] = useState(isUpdating ? book.pages : 0);
+  const [quantity, setQuantity] = useState(isUpdating ? book.quantity : "");
+  const [pages, setPages] = useState(isUpdating ? book.pages : "");
   const [withdraw, setWithdraw] = useState(isUpdating ? book.withdraw : 0);
 
   const db = getFirestore(app);
@@ -74,6 +74,16 @@ export function BookModal({
     setPages(0);
     setWithdraw(0);
   }
+
+  async function getBookData() {
+    const db = getFirestore(app);
+    const docRef = doc(db, "books", bookSelectedById);
+    getDoc(docRef).then((bookSelected) => setBook(bookSelected.data()));
+  }
+
+  useEffect(() => {
+    getBookData();
+  }, [isOpen]);
 
   return (
     <Modal

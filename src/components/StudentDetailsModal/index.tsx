@@ -8,6 +8,7 @@ import { BooksAvailableListModal } from "../BooksAvailableListModal";
 import { useRegister } from "../../hooks/useRegister";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { app } from "../../service/firebase";
+import { Loading } from "../Loading";
 
 interface StudentDetailsModalProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ export function StudentDetailsModal({
   isOpen,
   onRequestClose,
 }: StudentDetailsModalProps) {
+  const [loading, setLoading] = useState(false);
   const [isBookListOpen, setIsBookListOpen] = useState(false);
   const [student, setStudent] = useState({} as StudentProps | any);
   const { studentSelectById } = useRegister();
@@ -35,15 +37,20 @@ export function StudentDetailsModal({
     setIsBookListOpen(false);
   }
 
-  // async function getStudentData() {
-  //   const db = getFirestore(app);
-  //   const docRef = doc(db, "students", studentSelectById);
-  //   getDoc(docRef).then((student) => setStudent(student));
-  // }
+  async function getStudentData() {
+    setLoading(true);
 
-  // useEffect(() => {
-  //   getStudentData();
-  // }, [isOpen]);
+    const db = getFirestore(app);
+    const docRef = doc(db, "students", studentSelectById);
+    await getDoc(docRef).then((studentSelected) =>
+      setStudent(studentSelected.data())
+    );
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    getStudentData();
+  }, [isOpen]);
 
   return (
     <Modal
@@ -60,30 +67,36 @@ export function StudentDetailsModal({
           isOpen={isBookListOpen}
           onRequestClose={handleCloseBookListModal}
         />
-        <header>
-          <Student size={60} color="#e1e1e6" />
-          <div>
-            <strong>Murilo Leme de Souza</strong>
-            <p>ID: 190188</p>
-          </div>
-        </header>
-        <section>
-          <header>
-            <p>Lista de livros retirados</p>
-            <strong>Máx. 4</strong>
-          </header>
-          <BookListContent
-            title="Crepusculo"
-            onClick={() => {}}
-            type="remove"
-            titleButton="Remover"
-          />
-        </section>
-        <Button
-          title="Adicionar"
-          onClick={handleOpenBookListModal}
-          type="add"
-        />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <header>
+              <Student size={60} color="#e1e1e6" />
+              <div>
+                <strong>{student.name}</strong>
+                <p>{`ID: ${student.ID}`}</p>
+              </div>
+            </header>
+            <section>
+              <header>
+                <p>Lista de livros retirados</p>
+                <strong>Máx. 4</strong>
+              </header>
+              <BookListContent
+                title="Crepusculo"
+                onClick={() => {}}
+                type="remove"
+                titleButton="Remover"
+              />
+            </section>
+            <Button
+              title="Adicionar"
+              onClick={handleOpenBookListModal}
+              type="add"
+            />
+          </>
+        )}
       </Container>
     </Modal>
   );
