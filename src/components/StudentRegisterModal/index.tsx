@@ -45,11 +45,14 @@ export function StudentRegisterModal({
           placeholder="Nome completo do aluno"
           value={name}
           onChange={(event) => setName(event.target.value)}
+          required
         />
         <input
           placeholder="ID do aluno"
           value={ID}
           onChange={(event) => setID(event.target.value)}
+          required
+          maxLength={6}
         />
         <button onClick={handleStudentRegister}>Cadastrar Aluno</button>
       </Container>

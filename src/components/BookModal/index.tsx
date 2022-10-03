@@ -76,14 +76,13 @@ export function BookModal({
     setWithdraw(0);
   }
 
-  async function getBookData() {
+  function getBookData() {
     setLoading(true);
-    const db = getFirestore(app);
-    const docRef = doc(db, "books", bookSelectedById);
-    await getDoc(docRef).then((bookSelected) => setBook(bookSelected.data()));
 
-    console.log(book);
     if (isUpdating) {
+      const db = getFirestore(app);
+      const docRef = doc(db, "books", bookSelectedById);
+      getDoc(docRef).then((bookSelected) => setBook(bookSelected.data()));
       setTitle(book.title);
       setAuthor(book.author);
       setQuantity(book.quantity);
@@ -114,61 +113,59 @@ export function BookModal({
       <button className="react-modal-close" onClick={onRequestClose}>
         <X size={32} color="#e1e1e6" />
       </button>
-      <Container onSubmit={isUpdating ? handleEditBook : handleNewBook}>
-        {loading ? (
-          <Loading />
-        ) : (
-          <>
-            <h1>{isUpdating ? "Editar livro" : "Cadastrar livro"}</h1>
-            <label>Titulo</label>
-            <input
-              placeholder="Nome do autor"
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-              required
-            />
-            <label>Autor</label>
-            <input
-              placeholder="Nome do autor"
-              value={author}
-              onChange={(event) => setAuthor(event.target.value)}
-              required
-            />
-            <label>Livros disponíveis</label>
-            <input
-              placeholder="Quantidade de livros diponíveis"
-              value={quantity}
-              type="number"
-              onChange={(event) => setQuantity(Number(event.target.value))}
-              required
-            />
-            <label>Páginas</label>
-            <input
-              placeholder="Quantidade de paginas"
-              value={pages}
-              type="number"
-              onChange={(event) => setPages(Number(event.target.value))}
-              required
-            />
-            {isUpdating && (
-              <>
-                <label>Livros retirados</label>
-                <input
-                  placeholder="Livros retirados"
-                  value={withdraw}
-                  type="number"
-                  onChange={(event) => setWithdraw(Number(event.target.value))}
-                  required
-                />
-              </>
-            )}
+      {loading ? (
+        <Loading />
+      ) : (
+        <Container onSubmit={isUpdating ? handleEditBook : handleNewBook}>
+          <h1>{isUpdating ? "Editar livro" : "Cadastrar livro"}</h1>
+          <label>Titulo</label>
+          <input
+            placeholder="Nome do autor"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            required
+          />
+          <label>Autor</label>
+          <input
+            placeholder="Nome do autor"
+            value={author}
+            onChange={(event) => setAuthor(event.target.value)}
+            required
+          />
+          <label>Livros disponíveis</label>
+          <input
+            placeholder="Quantidade de livros diponíveis"
+            value={quantity}
+            type="number"
+            onChange={(event) => setQuantity(Number(event.target.value))}
+            required
+          />
+          <label>Páginas</label>
+          <input
+            placeholder="Quantidade de paginas"
+            value={pages}
+            type="number"
+            onChange={(event) => setPages(Number(event.target.value))}
+            required
+          />
+          {isUpdating && (
+            <>
+              <label>Livros retirados</label>
+              <input
+                placeholder="Livros retirados"
+                value={withdraw}
+                type="number"
+                onChange={(event) => setWithdraw(Number(event.target.value))}
+                required
+              />
+            </>
+          )}
 
-            <button type="submit">
-              {isUpdating ? "Editar Livro" : "Cadastrar Livro"}
-            </button>
-          </>
-        )}
-      </Container>
+          <button type="submit">
+            {isUpdating ? "Editar Livro" : "Cadastrar Livro"}
+          </button>
+        </Container>
+      )}
     </Modal>
   );
 }
