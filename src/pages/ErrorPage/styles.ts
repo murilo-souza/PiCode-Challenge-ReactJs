@@ -2,15 +2,16 @@ import styled from "styled-components";
 import { theme } from "../../global/theme/theme";
 
 export const Container = styled.main`
-     display: flex;
-    align-items: center;
-    flex-direction: column;
-    margin-top: 120px;
-    h1{
-        color: ${theme.colors.text}
-    }
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 120px;
+`;
 
-    strong {
-        color: ${theme.colors.stroke}
-    }
-`
+export const Title = styled.h1`
+  color: ${theme.colors.text};
+`;
+
+export const Description = styled.strong`
+  color: ${theme.colors.stroke};
+`;
