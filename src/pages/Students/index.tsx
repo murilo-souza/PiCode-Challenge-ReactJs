@@ -3,7 +3,7 @@ import { CarModel } from "../../components/CardModel";
 import { Header } from "../../components/Header";
 import { Container } from "./styled";
 import { Student } from "phosphor-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { StudentRegisterModal } from "../../components/StudentRegisterModal";
 import { StudentDetailsModal } from "../../components/StudentDetailsModal";
 import { useRegister } from "../../hooks/useRegister";
@@ -17,34 +17,27 @@ export function Students() {
 
   const { students, getStudentIdToEdit, loading } = useRegister();
 
-  function handleOpenStudentRegisterModal() {
-    setIsStudentRegisterModalOpen(true);
-  }
+  const handleOpenStudentDetailsModal = useCallback(
+    (id: string) => {
+      getStudentIdToEdit(id);
+      setIsStudentDetailsModalOpen(true);
+    },
+    [getStudentIdToEdit]
+  );
 
-  function handleCloseStudentRegisterModal() {
-    setIsStudentRegisterModalOpen(false);
-  }
-
-  function handleOpenStudentDetailsModal(d: any) {
-    setIsStudentDetailsModalOpen(true);
-  }
-
-  function handleCloseStudentDetailsModal() {
-    setIsStudentDetailsModalOpen(false);
-  }
   return (
     <Container>
       <Header
         registerTypeName="+ Cadastrar aluno"
-        onOpenRegisterModal={handleOpenStudentRegisterModal}
+        onOpenRegisterModal={() => setIsStudentRegisterModalOpen(true)}
       />
       <StudentRegisterModal
         isOpen={isStudentRegisterModalOpen}
-        onRequestClose={handleCloseStudentRegisterModal}
+        onRequestClose={() => setIsStudentRegisterModalOpen(false)}
       />
       <StudentDetailsModal
         isOpen={isStudentDetailsModalOpen}
-        onRequestClose={handleCloseStudentDetailsModal}
+        onRequestClose={() => setIsStudentDetailsModalOpen(false)}
       />
       {loading ? (
         <Loading />
@@ -55,9 +48,7 @@ export function Students() {
             title={student.name}
             subtitle={`ID: ${student.ID}`}
             icon={<Student size={45} color="#e1e1e6" />}
-            onClick={() =>
-              handleOpenStudentDetailsModal(getStudentIdToEdit(student.id))
-            }
+            onClick={() => handleOpenStudentDetailsModal(student.id)}
           >
             <Badge title="Livros retirados" quantity={4} />
           </CarModel>

@@ -1,5 +1,5 @@
 import { CarModel } from "../../components/CardModel";
-import { Container } from "./styles";
+import { BooksList, Container } from "./styles";
 import { Badge } from "../../components/Badge";
 import { Books as BooksIcon } from "phosphor-react";
 import { Header } from "../../components/Header";
@@ -42,7 +42,7 @@ export function Books() {
       {loading ? (
         <Loading />
       ) : (
-        <section>
+        <BooksList>
           {books.map((book) => (
             <CarModel
               key={book.id}
@@ -58,7 +58,7 @@ export function Books() {
               <Badge title="Retirados" quantity={book.withdraw} />
             </CarModel>
           ))}
-        </section>
+        </BooksList>
       )}
     </Container>
   );
